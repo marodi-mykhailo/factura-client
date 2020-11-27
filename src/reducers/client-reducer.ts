@@ -1,7 +1,7 @@
 import {Dispatch} from "redux";
 import {facturaAPI} from "../api/factures-api";
 
-type ClientInfoType = {
+export type ClientInfoType = {
     ID: string,
     companyID: string,
     name: string,
@@ -12,7 +12,7 @@ type ClientInfoType = {
     currency: string
 }
 
-type ClientAddressType = {
+export type ClientAddressType = {
     ID: string,
     street: string,
     postalCode: string,
@@ -20,7 +20,7 @@ type ClientAddressType = {
     country: string
 }
 
-type ClientCompanyType = {
+export type ClientCompanyType = {
     ID: string,
     name: string
 }

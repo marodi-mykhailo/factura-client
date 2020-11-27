@@ -6,6 +6,7 @@ import {useDispatch} from "react-redux";
 import {getClientsTC} from "./reducers/client-reducer";
 import {Route, Switch} from 'react-router-dom';
 import ClientTable from "./Components/ClientsTable/ClientsTable";
+import SellersTable from "./Components/SellersTable/SellersTable";
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
             <Main>
                 <Switch>
                     <Route path={'/clients'} render={() => <ClientTable/>}/>
+                    <Route path={'/sellers'} render={() => <SellersTable/>}/>
                 </Switch>
             </Main>
         </div>
