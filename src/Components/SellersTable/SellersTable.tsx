@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {makeStyles} from '@material-ui/core/styles';
+import {createStyles, makeStyles, Theme} from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -11,12 +11,26 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../redux/store";
 import {ClientType, getClientsTC} from "../../reducers/client-reducer";
 import {getSellersTC, SellersType} from "../../reducers/sellers-reducer";
+import {Backdrop, Button, Fade, Modal} from "@material-ui/core";
+import ClientsTable from "../ClientsTable/ClientsTable";
+import ProductTable from "../../ProductTable/ProductTable";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme: Theme) => createStyles({
     table: {
         minWidth: 650,
     },
-});
+    modal: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    paper: {
+        backgroundColor: theme.palette.background.paper,
+        border: '2px solid #000',
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing(2, 4, 3),
+    },
+}));
 
 
 export default function SellersTable() {
@@ -25,6 +39,15 @@ export default function SellersTable() {
     useEffect(() => {
         dispatch(getSellersTC())
     }, [])
+    const [open, setOpen] = React.useState(false);
+
+    const handleOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
     const classes = useStyles();
     return (
         <TableContainer component={Paper}>
@@ -36,6 +59,7 @@ export default function SellersTable() {
                         <TableCell align="right"><span style={{fontSize: '16px'}}>Bill</span></TableCell>
                         <TableCell align="right"><span style={{fontSize: '16px'}}>Address</span></TableCell>
                         <TableCell align="right"><span style={{fontSize: '16px'}}>Company</span></TableCell>
+                        <TableCell align="right"><span style={{fontSize: '16px'}}>Products</span></TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -73,6 +97,29 @@ export default function SellersTable() {
                                 </div>
                             </TableCell>
                             <TableCell align="right"> <span style={{fontWeight: "bold"}}>{row.company.name}</span>
+                            </TableCell>
+                            <TableCell align="right">
+                                <Button variant="contained" color="primary" type="button" onClick={handleOpen}>
+                                    Products
+                                </Button>
+                                <Modal
+                                    aria-labelledby="transition-modal-title"
+                                    aria-describedby="transition-modal-description"
+                                    className={classes.modal}
+                                    open={open}
+                                    onClose={handleClose}
+                                    closeAfterTransition
+                                    BackdropComponent={Backdrop}
+                                    BackdropProps={{
+                                        timeout: 500,
+                                    }}
+                                >
+                                    <Fade in={open}>
+                                        <div className={classes.paper}>
+                                            <ProductTable products={row.sellerProducts}/>
+                                        </div>
+                                    </Fade>
+                                </Modal>
                             </TableCell>
                         </TableRow>
                     ))}
