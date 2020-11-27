@@ -23,6 +23,12 @@ import Badge from '@material-ui/core/Badge';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import {AccountCircle} from "@material-ui/icons";
 import MoreIcon from '@material-ui/icons/MoreVert';
+import GroupIcon from '@material-ui/icons/Group';
+import DescriptionIcon from '@material-ui/icons/Description';
+import PersonIcon from '@material-ui/icons/Person';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import {NavLink} from "react-router-dom";
+import s from './Main.module.css'
 
 const drawerWidth = 240;
 
@@ -152,6 +158,7 @@ type MainPropsType = {
     children: React.ReactNode
 }
 
+
 export default function Main(props: MainPropsType) {
     const classes = useStyles();
     const theme = useTheme();
@@ -277,21 +284,34 @@ export default function Main(props: MainPropsType) {
                 </div>
                 <Divider/>
                 <List>
-                    {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                        <ListItem button key={text}>
-                            <ListItemIcon>{index % 2 === 0 ? <InboxIcon/> : <MailIcon/>}</ListItemIcon>
-                            <ListItemText primary={text}/>
+                    <NavLink className={s.link} to={'/clients'}>
+                        <ListItem button>
+                            <ListItemIcon> <GroupIcon/></ListItemIcon>
+                            <ListItemText primary={"Clients"}/>
                         </ListItem>
-                    ))}
+                    </NavLink>
+
+                    <NavLink className={s.link} to={'/invoices'}>
+                        <ListItem button>
+                            <ListItemIcon> <DescriptionIcon/></ListItemIcon>
+                            <ListItemText primary={"Invoices"}/>
+                        </ListItem>
+                    </NavLink>
+
+                    <NavLink className={s.link} to={'/sellers'}>
+                        <ListItem button>
+                            <ListItemIcon> <PersonIcon/></ListItemIcon>
+                            <ListItemText primary={"Sellers"}/>
+                        </ListItem>
+                    </NavLink>
+
                 </List>
                 <Divider/>
                 <List>
-                    {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                        <ListItem button key={text}>
-                            <ListItemIcon>{index % 2 === 0 ? <InboxIcon/> : <MailIcon/>}</ListItemIcon>
-                            <ListItemText primary={text}/>
-                        </ListItem>
-                    ))}
+                    <ListItem button>
+                        <ListItemIcon> <ExitToAppIcon/></ListItemIcon>
+                        <ListItemText primary={"Exit"}/>
+                    </ListItem>
                 </List>
             </Drawer>
             <main className={classes.content}>
