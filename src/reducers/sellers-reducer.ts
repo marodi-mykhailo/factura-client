@@ -1,22 +1,16 @@
 import {ClientAddressType, ClientCompanyType, ClientInfoType, ClientType} from "./client-reducer";
 import {Dispatch} from "redux";
 import {facturaAPI} from "../api/factures-api";
+import {ProductType} from "./products-reducer";
 
-export type SellerProduct = {
-    ID: string,
-    name: string,
-    price: string,
-    unit: string,
-    currency: string,
-    tax: string
-}
+
 
 export type SellersType = {
     ID: string,
     info: ClientInfoType,
     address: ClientAddressType[],
     company: ClientCompanyType,
-    sellerProducts: SellerProduct[]
+    sellerProducts: ProductType[]
 }
 
 

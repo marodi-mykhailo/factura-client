@@ -9,6 +9,7 @@ import ClientTable from "./Components/ClientsTable/ClientsTable";
 import SellersTable from "./Components/SellersTable/SellersTable";
 import {InvoiceForm} from "./Components/InvoiceForm/InvoiceForm";
 import {getSellersTC} from "./reducers/sellers-reducer";
+import InvoicesTable from "./Components/InvoicesTable/InvoicesTable";
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
                 <Switch>
                     <Route path={'/clients'} render={() => <ClientTable/>}/>
                     <Route path={'/sellers'} render={() => <SellersTable/>}/>
+                    <Route path={'/invoices'} render={() => <InvoicesTable/>}/>
                     <Route path={'/create-invoice'} render={() => <InvoiceForm/>}/>
 
                 </Switch>

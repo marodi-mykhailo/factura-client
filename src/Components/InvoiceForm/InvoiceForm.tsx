@@ -23,6 +23,9 @@ const validationSchema = yup.object({
     product: yup
         .string()
         .required('Product is required'),
+    productCount: yup
+        .string()
+        .required('Count is required'),
     status: yup
         .string()
         .required('Status is required'),
@@ -54,6 +57,7 @@ export const InvoiceForm = () => {
             client: '',
             seller: '',
             product: '',
+            productCount: '',
             status: ''
         },
         validationSchema: validationSchema,
@@ -163,6 +167,19 @@ export const InvoiceForm = () => {
                         </MenuItem>
                     ))}
                 </TextField>
+                <TextField
+                    id="productCount"
+                    name="productCount"
+                    type="number"
+                    label="Product Count"
+                    value={formik.values.productCount}
+                    onChange={formik.handleChange}
+                    placeholder="Please select count of products"
+                    variant="outlined"
+                    className={s.input}
+                    error={formik.touched.productCount && Boolean(formik.errors.productCount)}
+                    helperText={formik.touched.productCount && formik.errors.productCount}
+                />
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <KeyboardDatePicker
                         margin="normal"

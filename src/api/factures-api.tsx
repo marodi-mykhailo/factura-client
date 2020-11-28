@@ -1,6 +1,7 @@
 import axios from 'axios'
 import {ClientType} from "../reducers/client-reducer";
 import {SellersType} from "../reducers/sellers-reducer";
+import {InvoiceType} from "../reducers/invoice-reducer";
 
 const settings = {
     withCredentials: true,
@@ -17,5 +18,11 @@ export const facturaAPI = {
     },
     getSellers(){
         return instance.get<SellersType[]>('sellers')
+    },
+    getInvoices(){
+        return instance.get<InvoiceType[]>('factures')
+    },
+    createInvoice(invoiceData:any){
+        return instance.post('create-facture', invoiceData)
     }
 }
