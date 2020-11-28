@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export type InvoiceStatus = "paid" | "partially" | "unpaid"
 
-const InvoisePaymentStatus = ["paid", "partially", "unpaid"]
+const InvoicePaymentStatus: InvoiceStatus[] = ["paid", "partially", "unpaid"]
 
 export const InvoiceForm = () => {
     const classes = useStyles();
@@ -47,9 +47,8 @@ export const InvoiceForm = () => {
             product: '',
             status: ''
         },
-        validationSchema: validationSchema,
         onSubmit: (values) => {
-            alert(values.client)
+            alert(JSON.stringify(values))
         },
     });
 
@@ -132,8 +131,8 @@ export const InvoiceForm = () => {
                         ))}
                     </TextField>
                     <TextField
-                        id="products"
-                        name="products"
+                        id="product"
+                        name="product"
                         select
                         label="Product"
                         value={formik.values.product}
@@ -187,7 +186,7 @@ export const InvoiceForm = () => {
                         variant="outlined"
                         className={s.input}
                     >
-                        {InvoisePaymentStatus.map((option, idx) => (
+                        {InvoicePaymentStatus.map((option, idx) => (
                             <MenuItem key={idx} value={option}>
                                 {option}
                             </MenuItem>

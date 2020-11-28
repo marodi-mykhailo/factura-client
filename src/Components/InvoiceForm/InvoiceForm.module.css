@@ -1,11 +1,11 @@
 .paper {
-    max-width: 80%;
+    max-width: 70%;
     margin: 0 auto;
     padding: 10px;
 }
 
 .input {
-    width: 60% !important;
+    width: 80% !important;
     margin: 20px auto !important;
 }
 
