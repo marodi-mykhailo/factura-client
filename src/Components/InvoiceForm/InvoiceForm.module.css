@@ -1,0 +1,15 @@
+.paper {
+    max-width: 80%;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.input {
+    width: 60% !important;
+    margin: 20px auto !important;
+}
+
+.btn {
+    width: 60%;
+    margin: 20px auto !important;
+}

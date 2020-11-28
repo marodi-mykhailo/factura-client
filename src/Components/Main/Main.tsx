@@ -15,20 +15,18 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 import SearchIcon from '@material-ui/icons/Search';
-import {InputBase} from "@material-ui/core";
-import Badge from '@material-ui/core/Badge';
-import NotificationsIcon from '@material-ui/icons/Notifications';
+import {Button, InputBase} from "@material-ui/core";
 import {AccountCircle} from "@material-ui/icons";
 import MoreIcon from '@material-ui/icons/MoreVert';
 import GroupIcon from '@material-ui/icons/Group';
 import DescriptionIcon from '@material-ui/icons/Description';
 import PersonIcon from '@material-ui/icons/Person';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import {NavLink} from "react-router-dom";
 import s from './Main.module.css'
+import {green} from "@material-ui/core/colors";
 
 const drawerWidth = 240;
 
@@ -151,6 +149,14 @@ const useStyles = makeStyles((theme: Theme) =>
                 display: 'none',
             },
         },
+        button: {
+            margin: theme.spacing(1),
+            backgroundColor: green[500],
+            '&:hover': {
+                backgroundColor: green[700],
+            },
+        },
+
     }),
 );
 
@@ -213,7 +219,7 @@ export default function Main(props: MainPropsType) {
                         <MenuIcon/>
                     </IconButton>
                     <Typography className={classes.title} variant="h6" noWrap>
-                        Material-UI
+                        Invoice
                     </Typography>
                     <div className={classes.search}>
                         <div className={classes.searchIcon}>
@@ -230,16 +236,17 @@ export default function Main(props: MainPropsType) {
                     </div>
                     <div className={classes.grow}/>
                     <div className={classes.sectionDesktop}>
-                        <IconButton aria-label="show 4 new mails" color="inherit">
-                            <Badge badgeContent={4} color="secondary">
-                                <MailIcon/>
-                            </Badge>
-                        </IconButton>
-                        <IconButton aria-label="show 17 new notifications" color="inherit">
-                            <Badge badgeContent={17} color="secondary">
-                                <NotificationsIcon/>
-                            </Badge>
-                        </IconButton>
+                        <NavLink className={s.link} to={'/create-invoice'}>
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                size="large"
+                                className={classes.button}
+                                startIcon={<NoteAddIcon/>}
+                            >
+                                Create Invoice
+                            </Button>
+                        </NavLink>
                         <IconButton
                             edge="end"
                             aria-label="account of current user"
