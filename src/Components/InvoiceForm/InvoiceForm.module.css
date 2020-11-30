@@ -1,7 +1,6 @@
 .paper {
-    max-width: 70%;
-    margin: 0 auto;
-    padding: 10px;
+    min-width: 850px;
+    padding: 30px 0;
 }
 
 .input {
@@ -12,4 +11,13 @@
 .btn {
     width: 60%;
     margin: 20px auto !important;
+}
+
+
+@media screen
+and (min-device-width: 1200px)
+and (max-device-width: 1600px) {
+    .input{
+        margin: 10px auto!important;
+    }
 }

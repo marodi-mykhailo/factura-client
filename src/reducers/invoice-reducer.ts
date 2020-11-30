@@ -1,5 +1,6 @@
 import {Dispatch} from "redux";
 import {facturaAPI} from "../api/factures-api";
+import {Simulate} from "react-dom/test-utils";
 
 export type InvoiceType = {
     ID: string,
@@ -102,8 +103,12 @@ export const invoiceReducer = (state = initialInvoiceReducerState, action: Invoi
     switch (action.type) {
         case "SET_INVOICES":
             return [
-                ...state,
                 ...action.invoices
+            ]
+        case "ADD_INVOICE":
+            return [
+                action.invoiceData,
+                ...state
             ]
         default:
             return state
@@ -112,11 +117,17 @@ export const invoiceReducer = (state = initialInvoiceReducerState, action: Invoi
 
 type InvoiceReducerActionType =
     | ReturnType<typeof setInvoices>
+    | ReturnType<typeof addInvoice>
 
 const setInvoices = (invoices: InvoiceType[]) => ({
     type: "SET_INVOICES",
     invoices
-})
+} as const)
+
+const addInvoice = (invoiceData: InvoiceType) => ({
+    type: "ADD_INVOICE",
+    invoiceData
+} as const)
 
 
 export const getInvoicesTC = () => (dispatch: Dispatch) => {
@@ -127,4 +138,24 @@ export const getInvoicesTC = () => (dispatch: Dispatch) => {
         .catch(error => {
             console.log(error)
         })
+}
+
+export type invoiceDataForCreate = {
+    paymentMilliseconds: number | null,
+    issueMilliseconds: number | null,
+    client: string,
+    seller: string,
+    product: string,
+    productCount: string,
+    status: string
+}
+
+
+export const createInvoiceTC = (invoiceData: invoiceDataForCreate) => (dispatch: Dispatch) => {
+    facturaAPI.createInvoice(invoiceData)
+        .then((res) => {
+                console.log(res.data)
+        }).catch((error) => {
+        console.log(error)
+    })
 }

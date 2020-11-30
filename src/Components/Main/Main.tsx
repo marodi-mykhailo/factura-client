@@ -16,7 +16,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import SearchIcon from '@material-ui/icons/Search';
-import {Button, InputBase} from "@material-ui/core";
+import {Button, Fade, InputBase, Modal} from "@material-ui/core";
 import {AccountCircle} from "@material-ui/icons";
 import MoreIcon from '@material-ui/icons/MoreVert';
 import GroupIcon from '@material-ui/icons/Group';
@@ -27,6 +27,9 @@ import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import {NavLink} from "react-router-dom";
 import s from './Main.module.css'
 import {green} from "@material-ui/core/colors";
+import Backdrop from '@material-ui/core/Backdrop';
+import {InvoiceForm} from "../InvoiceForm/InvoiceForm";
+
 
 const drawerWidth = 240;
 
@@ -156,6 +159,17 @@ const useStyles = makeStyles((theme: Theme) =>
                 backgroundColor: green[700],
             },
         },
+        modal: {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+        paper: {
+            backgroundColor: theme.palette.background.paper,
+            boxShadow: theme.shadows[5],
+            padding: theme.spacing(2),
+            margin: theme.spacing(2),
+        },
 
     }),
 );
@@ -172,6 +186,15 @@ export default function Main(props: MainPropsType) {
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null);
+    const [modal, setModalOpen] = React.useState(false);
+
+    const modalOpen = () => {
+        setModalOpen(true);
+    };
+
+    const modalClose = () => {
+        setModalOpen(false);
+    };
 
 
     const handleDrawerOpen = () => {
@@ -236,17 +259,32 @@ export default function Main(props: MainPropsType) {
                     </div>
                     <div className={classes.grow}/>
                     <div className={classes.sectionDesktop}>
-                        <NavLink className={s.link} to={'/create-invoice'}>
-                            <Button
-                                variant="contained"
-                                color="secondary"
-                                size="large"
-                                className={classes.button}
-                                startIcon={<NoteAddIcon/>}
-                            >
-                                Create Invoice
-                            </Button>
-                        </NavLink>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            size="large"
+                            className={classes.button}
+                            startIcon={<NoteAddIcon/>}
+                            onClick={modalOpen}
+                        >
+                            Create Invoice
+                        </Button>
+                        <Modal
+                            aria-labelledby="transition-modal-title"
+                            aria-describedby="transition-modal-description"
+                            className={classes.modal}
+                            open={modal}
+                            onClose={modalClose}
+                            closeAfterTransition
+                            BackdropComponent={Backdrop}
+                            BackdropProps={{
+                                timeout: 500,
+                            }}
+                        >
+                            <Fade in={modal}>
+                                <InvoiceForm/>
+                            </Fade>
+                        </Modal>
                         <IconButton
                             edge="end"
                             aria-label="account of current user"

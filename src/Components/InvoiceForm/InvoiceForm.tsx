@@ -4,14 +4,23 @@ import {useFormik} from 'formik';
 import * as yup from 'yup';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import {createStyles, Grid, makeStyles, MenuItem, Paper, Theme} from "@material-ui/core";
+import {Backdrop, createStyles, Fade, makeStyles, MenuItem, Modal, Paper, Theme} from "@material-ui/core";
 import s from './InvoiceForm.module.css'
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../redux/store";
-import {ClientInfoType, ClientType} from "../../reducers/client-reducer";
+import {ClientType} from "../../reducers/client-reducer";
 import {SellersType} from "../../reducers/sellers-reducer";
 import {KeyboardDatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
+import {createInvoiceTC} from "../../reducers/invoice-reducer";
+import ProductPickerForm from "../ProductPickerForm/ProductPickerForm";
+import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
+import {addProduct, InvoiceProductType, resetProducts} from "../../reducers/invoice-product-reducer";
+
+
+export const isObjEqual = (obj1: { ID: string, amount: string }, obj2: { ID: string, amount: string }) => {
+    return !(obj1.ID === obj2.ID && obj1.amount === obj2.amount);
+}
 
 const validationSchema = yup.object({
     client: yup
@@ -40,8 +49,40 @@ const useStyles = makeStyles((theme: Theme) =>
             },
             display: 'flex',
             flexDirection: 'column',
-            width: '100%'
+            width: '100%',
+            overflow: 'auto',
+            maxHeight: '90vh'
         },
+        modal: {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+        paper: {
+            backgroundColor: theme.palette.background.paper,
+            boxShadow: theme.shadows[5],
+            padding: theme.spacing(2),
+            margin: theme.spacing(2),
+        },
+        product: {
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: "80%",
+            margin: "10px auto",
+            padding: "20px 0"
+        },
+        h1: {
+            ...theme.typography.button,
+            backgroundColor: theme.palette.background.paper,
+            padding: theme.spacing(1),
+        },
+        btnWrapp: {
+            display: 'flex',
+            justifyContent: 'space-between',
+            width: '60%'
+        }
     }),
 );
 
@@ -50,6 +91,7 @@ export type InvoiceStatus = "paid" | "partially" | "unpaid"
 const InvoicePaymentStatus: InvoiceStatus[] = ["paid", "partially", "unpaid"]
 
 export const InvoiceForm = () => {
+    const dispatch = useDispatch()
     const classes = useStyles();
 
     const formik = useFormik({
@@ -62,35 +104,36 @@ export const InvoiceForm = () => {
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            alert(JSON.stringify(values))
+            dispatch(createInvoiceTC({...values, paymentMilliseconds, issueMilliseconds}))
+            formik.resetForm()
         },
     });
 
-    // const [client, setClient] = React.useState('');
-    // const [seller, setSeller] = React.useState('');
-    // const [product, setProduct] = React.useState('');
-    // const [status, setStatus] = React.useState('');
-
     const clients = useSelector<AppRootStateType, ClientType[]>(state => state.clients)
     const sellers = useSelector<AppRootStateType, SellersType[]>(state => state.sellers)
-    const products = sellers.filter(item => item.ID === formik.values.seller)
+    const [modal, setModalOpen] = React.useState(false);
 
-    // const clientChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    //     setClient(event.target.value);
-    // };
-    //
-    // const sellerChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    //     setSeller(event.target.value);
-    // };
-    //
-    // const productChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    //     setProduct(event.target.value);
-    // };
-    //
-    // const statusChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    //     setStatus(event.target.value);
-    // };
-    //
+    const products = sellers.find(item => item.ID === formik.values.seller)
+
+    const invoiceProductArr = useSelector<AppRootStateType, InvoiceProductType[]>(state => state.invoiceProducts)
+
+    const addItemsArr = () => {
+        const obj = {
+            ID: formik.values.product,
+            amount: formik.values.productCount
+        }
+        dispatch(addProduct(obj))
+        console.log(JSON.stringify(invoiceProductArr))
+    }
+
+    const modalOpen = () => {
+        setModalOpen(true);
+    };
+
+    const modalClose = () => {
+        setModalOpen(false);
+    };
+
     const [paymentDate, setPaymentDate] = React.useState<Date | null>(
         new Date(),
     );
@@ -98,6 +141,10 @@ export const InvoiceForm = () => {
     const [issueDate, setIssueDate] = React.useState<Date | null>(
         new Date(),
     );
+
+    const paymentMilliseconds = paymentDate && paymentDate.getTime() / 1000
+    const issueMilliseconds = issueDate && issueDate.getTime() / 1000
+
 
     const paymentDateChange = (date: Date | null) => {
         setPaymentDate(date);
@@ -148,38 +195,76 @@ export const InvoiceForm = () => {
                         </MenuItem>
                     ))}
                 </TextField>
-                <TextField
-                    id="product"
-                    name="product"
-                    select
-                    label="Product"
-                    value={formik.values.product}
-                    onChange={formik.handleChange}
-                    placeholder="Please select your Product"
-                    variant="outlined"
-                    className={s.input}
-                    error={formik.touched.product && Boolean(formik.errors.product)}
-                    helperText={formik.touched.product && formik.errors.product}
-                >
-                    {products[0]?.sellerProducts.map((option, idx) => (
-                        <MenuItem key={idx} value={option.ID}>
-                            {option.name}
-                        </MenuItem>
-                    ))}
-                </TextField>
-                <TextField
-                    id="productCount"
-                    name="productCount"
-                    type="number"
-                    label="Product Count"
-                    value={formik.values.productCount}
-                    onChange={formik.handleChange}
-                    placeholder="Please select count of products"
-                    variant="outlined"
-                    className={s.input}
-                    error={formik.touched.productCount && Boolean(formik.errors.productCount)}
-                    helperText={formik.touched.productCount && formik.errors.productCount}
-                />
+                <Paper elevation={4} className={classes.product}>
+                    <h1 className={classes.h1}>Product</h1>
+                    <TextField
+                        id="product"
+                        name="product"
+                        select
+                        label="Product"
+                        value={formik.values.product}
+                        onChange={formik.handleChange}
+                        placeholder="Please select your Product"
+                        variant="outlined"
+                        className={s.input}
+                        error={formik.touched.product && Boolean(formik.errors.product)}
+                        helperText={formik.touched.product && formik.errors.product}
+                    >
+                        {products?.sellerProducts.map((option, idx) => (
+                            <MenuItem key={idx} value={option.ID}>
+                                {option.name}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+
+                    <TextField
+                        id="productCount"
+                        name="productCount"
+                        type="number"
+                        label="Product Count"
+                        value={formik.values.productCount}
+                        onChange={formik.handleChange}
+                        placeholder="Please select count of products"
+                        variant="outlined"
+                        className={s.input}
+                        error={formik.touched.productCount && Boolean(formik.errors.productCount)}
+                        helperText={formik.touched.productCount && formik.errors.productCount}
+                    />
+                    <div className={classes.btnWrapp}>
+                        <Button variant="contained"
+                                color="primary"
+                                size="large"
+                                onClick={addItemsArr}
+                        >
+                            Add to list
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            size="large"
+                            startIcon={<PlaylistAddCheckIcon/>}
+                            onClick={modalOpen}
+                        >
+                            List of Products
+                        </Button>
+                        <Modal
+                            aria-labelledby="transition-modal-title"
+                            aria-describedby="transition-modal-description"
+                            className={classes.modal}
+                            open={modal}
+                            onClose={modalClose}
+                            closeAfterTransition
+                            BackdropComponent={Backdrop}
+                            BackdropProps={{
+                                timeout: 500,
+                            }}
+                        >
+                            <Fade in={modal}>
+                                <ProductPickerForm products={invoiceProductArr} allProducts={products?.sellerProducts}/>
+                            </Fade>
+                        </Modal>
+                    </div>
+                </Paper>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <KeyboardDatePicker
                         margin="normal"
@@ -232,6 +317,7 @@ export const InvoiceForm = () => {
                 </Button>
             </form>
         </Paper>
-    );
+    )
+        ;
 };
 

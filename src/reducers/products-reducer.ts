@@ -94,7 +94,6 @@ export const productReducer = (state = initialProductState, action: ProductsRedu
     switch (action.type) {
         case "SET_PRODUCTS":
             return [
-                ...state,
                 ...action.products
             ]
         default:

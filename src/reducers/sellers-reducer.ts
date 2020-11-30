@@ -79,7 +79,6 @@ export const sellersReducer = (state = sellerInitialState, action: SellersReduce
     switch (action.type) {
         case "SET_SELLERS":
             return [
-                ...state,
                 ...action.sellers
             ]
         default:

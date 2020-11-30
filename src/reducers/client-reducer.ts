@@ -54,7 +54,6 @@ export const clientReducer = (state = clientInitialState, action: ClientsActionT
     switch (action.type) {
         case "SET_CLIENTS":
             return [
-                ...state,
                 ...action.clients
             ]
         default:
