@@ -11,8 +11,10 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../redux/store";
 import {ClientType} from "../../reducers/client-reducer";
 import {SellersType} from "../../reducers/sellers-reducer";
-import {getInvoicesTC, InvoiceType} from "../../reducers/invoice-reducer";
+import {deleteInvoiceTC, getInvoicesTC, InvoiceType} from "../../reducers/invoice-reducer";
 import ProductModal from "../ProductModal/ProductModal";
+import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
+import {Box} from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     table: {
@@ -29,6 +31,10 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         boxShadow: theme.shadows[5],
         padding: theme.spacing(2, 4, 3),
     },
+    span: {
+        fontWeight: "bold",
+        fontSize: "16px"
+    }
 }));
 
 
@@ -61,10 +67,14 @@ export default function InvoicesTable() {
         }
     }
 
+    const deleteHandler = (invoiceId: string) => {
+        dispatch(deleteInvoiceTC(invoiceId))
+    }
+
     const classes = useStyles();
     return (
         <TableContainer component={Paper}>
-            <Table className={classes.table} aria-label="simple table">
+            <Table size={"medium"} className={classes.table} aria-label="simple table">
                 <TableHead>
                     <TableRow>
                         <TableCell><span style={{fontSize: '16px'}}>Invoice Number</span></TableCell>
@@ -76,42 +86,57 @@ export default function InvoicesTable() {
                         <TableCell align="right"><span style={{fontSize: '16px'}}>Status</span></TableCell>
                         <TableCell align="right"><span style={{fontSize: '16px'}}>PriceNetto</span></TableCell>
                         <TableCell align="right"><span style={{fontSize: '16px'}}>priceBrutto</span></TableCell>
-                        <TableCell align="right"><span style={{fontSize: '16px'}}>Products</span></TableCell>
+                        <TableCell align="left"><span style={{fontSize: '16px'}}>Products</span></TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {rows.map((row) => (
-                        <TableRow key={row.ID}>
+                        <TableRow style={{height: 100}} key={row.ID}>
                             <TableCell component="th" scope="row">
-                                <span style={{fontWeight: "bold"}}>{row.numberFacture}</span>
+                                <span className={classes.span}>{row.numberFacture}</span>
                             </TableCell>
 
                             <TableCell align="right"
-                                       style={{fontWeight: "bold"}}>
+                                       className={classes.span}>
                                 {findClientName(row.clientID)}
                             </TableCell>
                             <TableCell align="right">
                                 <span
-                                    style={{fontWeight: "bold", fontSize: '14px'}}>{findSellerName(row.sellerID)}</span>
+                                    className={classes.span}>{findSellerName(row.sellerID)}</span>
                             </TableCell>
                             <TableCell align="right"
-                                       style={{fontWeight: "bold"}}>
+                                       className={classes.span}>
                                 {new Date(parseInt(row.sellDate)).toDateString()}
                             </TableCell>
                             <TableCell align="right"> <span
-                                style={{fontWeight: "bold"}}>{new Date(parseInt(row.paymentDate)).toDateString()}</span>
+                                style={{
+                                    fontWeight: "bold",
+                                    fontSize: "16px"
+                                }}>{new Date(parseInt(row.paymentDate)).toDateString()}</span>
                             </TableCell>
                             <TableCell align="right"> <span
-                                style={{fontWeight: "bold"}}>{new Date(parseInt(row.issueDate)).toDateString()}</span>
+                                style={{
+                                    fontWeight: "bold",
+                                    fontSize: "16px"
+                                }}>{new Date(parseInt(row.issueDate)).toDateString()}</span>
                             </TableCell>
-                            <TableCell align="right"> <span style={{fontWeight: "bold"}}>{row.status}</span>
+                            <TableCell align="right"> <span
+                                className={classes.span}>{row.status}</span>
                             </TableCell>
-                            <TableCell align="right"> <span style={{fontWeight: "bold"}}>{row.priceNetto}</span>
+                            <TableCell align="right"> <span
+                                className={classes.span}>{row.priceNetto}</span>
                             </TableCell>
-                            <TableCell align="right"> <span style={{fontWeight: "bold"}}>{row.priceBrutto}</span>
+                            <TableCell align="right"> <span
+                                className={classes.span}>{row.priceBrutto}</span>
                             </TableCell>
-                            <TableCell align="right">
-                                <ProductModal products={row.products}/>
+                            <TableCell align="center">
+                                <Box display={'flex'}>
+                                    <ProductModal products={row.products}/>
+                                    <DeleteOutlineIcon color={"secondary"}
+                                                       style={{cursor: "pointer", margin: "0 10px"}}
+                                                       fontSize={"large"}
+                                                       onClick={() => deleteHandler(row.ID)}/>
+                                </Box>
                             </TableCell>
                         </TableRow>
                     ))}

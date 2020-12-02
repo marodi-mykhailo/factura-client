@@ -6,6 +6,7 @@ import Fade from '@material-ui/core/Fade';
 import {Button} from "@material-ui/core";
 import InvoicesProductTable from "../InvoicesTable/InvoicesProductTable/InvoicesProductTable";
 import {InvoiceProductType} from "../../reducers/invoice-product-reducer";
+import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -35,9 +36,7 @@ export default function ProductModal(props: ProductModalPropsType) {
 
     return (
         <div>
-            <Button variant="contained" color="primary" type="button" onClick={handleOpen}>
-                Products
-            </Button>
+            <ShoppingBasketIcon fontSize={"large"} style={{cursor: "pointer"}} color="primary" onClick={handleOpen}/>
             <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"

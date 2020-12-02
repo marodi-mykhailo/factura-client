@@ -1,6 +1,5 @@
 import {Dispatch} from "redux";
 import {facturaAPI} from "../api/factures-api";
-import {Simulate} from "react-dom/test-utils";
 import {resetProducts} from "./invoice-product-reducer";
 
 export type InvoiceType = {
@@ -111,6 +110,8 @@ export const invoiceReducer = (state = initialInvoiceReducerState, action: Invoi
                 action.invoiceData,
                 ...state
             ]
+        case "DELETE_INVOICE":
+            return state.filter(item => item.ID !== action.id)
         default:
             return state
     }
@@ -119,6 +120,7 @@ export const invoiceReducer = (state = initialInvoiceReducerState, action: Invoi
 type InvoiceReducerActionType =
     | ReturnType<typeof setInvoices>
     | ReturnType<typeof addInvoice>
+    | ReturnType<typeof deleteInvoice>
 
 const setInvoices = (invoices: InvoiceType[]) => ({
     type: "SET_INVOICES",
@@ -130,6 +132,10 @@ const addInvoice = (invoiceData: InvoiceType) => ({
     invoiceData
 } as const)
 
+export const deleteInvoice = (id: string) => ({
+    type: "DELETE_INVOICE",
+    id
+} as const)
 
 export const getInvoicesTC = () => (dispatch: Dispatch) => {
     facturaAPI.getInvoices()
@@ -159,6 +165,17 @@ export const createInvoiceTC = (invoiceData: invoiceDataForCreate) => (dispatch:
             if (res.data.resultCode === 0) {
                 dispatch(addInvoice(res.data.data))
                 dispatch(resetProducts())
+            }
+        }).catch((error) => {
+        console.log(error)
+    })
+}
+
+export const deleteInvoiceTC = (invoiceId: string) => (dispatch: Dispatch) => {
+    facturaAPI.deleteInvoice(invoiceId)
+        .then((res) => {
+            if (res.data.resultCode === 0) {
+                dispatch(deleteInvoice(invoiceId))
             }
         }).catch((error) => {
         console.log(error)

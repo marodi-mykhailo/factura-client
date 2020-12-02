@@ -14,6 +14,7 @@ import {getSellersTC, SellersType} from "../../reducers/sellers-reducer";
 import {Backdrop, Button, Fade, Modal} from "@material-ui/core";
 import ClientsTable from "../ClientsTable/ClientsTable";
 import ProductTable from "../../ProductTable/ProductTable";
+import ShoppingBasketIcon from "@material-ui/icons/ShoppingBasket";
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     table: {
@@ -99,9 +100,7 @@ export default function SellersTable() {
                             <TableCell align="right"> <span style={{fontWeight: "bold"}}>{row.company.name}</span>
                             </TableCell>
                             <TableCell align="right">
-                                <Button variant="contained" color="primary" type="button" onClick={handleOpen}>
-                                    Products
-                                </Button>
+                                <ShoppingBasketIcon fontSize={"large"} style={{cursor: "pointer"}} color="primary" onClick={handleOpen}/>
                                 <Modal
                                     aria-labelledby="transition-modal-title"
                                     aria-describedby="transition-modal-description"

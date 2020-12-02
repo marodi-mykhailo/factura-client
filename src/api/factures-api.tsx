@@ -31,5 +31,8 @@ export const facturaAPI = {
     },
     createInvoice(invoiceData: invoiceDataForCreate) {
         return instance.post<ResponseType<InvoiceType>>('create-facture', invoiceData)
+    },
+    deleteInvoice(invoiceId: string){
+        return instance.delete<ResponseType>(`delete-facture/${invoiceId}`)
     }
 }
