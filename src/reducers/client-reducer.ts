@@ -75,7 +75,9 @@ const setClients = (clients: ClientType[]) => ({
 export const getClientsTC = () => (dispatch: Dispatch) => {
     facturaAPI.getClients()
         .then((res) => {
-            dispatch(setClients(res.data))
+            if (res.data.resultCode === 0) {
+                dispatch(setClients(res.data.data))
+            }
         }).catch((error) => {
         console.log(error)
     })

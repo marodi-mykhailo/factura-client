@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import 'date-fns';
 import {useFormik} from 'formik';
 import * as yup from 'yup';
@@ -29,12 +29,6 @@ const validationSchema = yup.object({
     seller: yup
         .string()
         .required('Seller is required'),
-    product: yup
-        .string()
-        .required('Product is required'),
-    productCount: yup
-        .string()
-        .required('Count is required'),
     status: yup
         .string()
         .required('Status is required'),
@@ -94,6 +88,12 @@ export const InvoiceForm = () => {
     const dispatch = useDispatch()
     const classes = useStyles();
 
+    useEffect(() => {
+        return () => {
+            dispatch(resetProducts())
+        }
+    }, [])
+
     const formik = useFormik({
         initialValues: {
             client: '',
@@ -104,8 +104,25 @@ export const InvoiceForm = () => {
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            dispatch(createInvoiceTC({...values, paymentMilliseconds, issueMilliseconds}))
-            formik.resetForm()
+            let newInvoice = {
+                clientID: formik.values.client,
+                sellerID: formik.values.seller,
+                products: invoiceProductArr,
+                sellDate: sellMilliseconds,
+                paymentDate: paymentMilliseconds,
+                issueDate: issueMilliseconds,
+                status: formik.values.status
+            }
+            dispatch(createInvoiceTC(newInvoice))
+            formik.resetForm({
+                values: {
+                    client: '',
+                    seller: '',
+                    product: '',
+                    productCount: '',
+                    status: ''
+                }
+            })
         },
     });
 
@@ -122,8 +139,16 @@ export const InvoiceForm = () => {
             ID: formik.values.product,
             amount: formik.values.productCount
         }
+        formik.resetForm({
+            values: {
+                client: formik.values.client,
+                seller: formik.values.seller,
+                product: '',
+                productCount: '',
+                status: formik.values.status
+            }
+        })
         dispatch(addProduct(obj))
-        console.log(JSON.stringify(invoiceProductArr))
     }
 
     const modalOpen = () => {
@@ -134,17 +159,26 @@ export const InvoiceForm = () => {
         setModalOpen(false);
     };
 
+    const [sellDate, setSellDate] = React.useState<Date | null>(
+        new Date(),
+    );
+
     const [paymentDate, setPaymentDate] = React.useState<Date | null>(
         new Date(),
     );
+
 
     const [issueDate, setIssueDate] = React.useState<Date | null>(
         new Date(),
     );
 
+    const sellMilliseconds = issueDate && issueDate.getTime() / 1000
     const paymentMilliseconds = paymentDate && paymentDate.getTime() / 1000
     const issueMilliseconds = issueDate && issueDate.getTime() / 1000
 
+    const sellDateChange = (date: Date | null) => {
+        setSellDate(date);
+    };
 
     const paymentDateChange = (date: Date | null) => {
         setPaymentDate(date);
@@ -207,6 +241,7 @@ export const InvoiceForm = () => {
                         placeholder="Please select your Product"
                         variant="outlined"
                         className={s.input}
+                        disabled={!formik.values.seller}
                         error={formik.touched.product && Boolean(formik.errors.product)}
                         helperText={formik.touched.product && formik.errors.product}
                     >
@@ -235,6 +270,7 @@ export const InvoiceForm = () => {
                                 color="primary"
                                 size="large"
                                 onClick={addItemsArr}
+                                disabled={!formik.values.product || !formik.values.productCount}
                         >
                             Add to list
                         </Button>
@@ -244,6 +280,7 @@ export const InvoiceForm = () => {
                             size="large"
                             startIcon={<PlaylistAddCheckIcon/>}
                             onClick={modalOpen}
+                            disabled={invoiceProductArr.length === 0}
                         >
                             List of Products
                         </Button>
@@ -266,6 +303,19 @@ export const InvoiceForm = () => {
                     </div>
                 </Paper>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <KeyboardDatePicker
+                        margin="normal"
+                        id="sellDate"
+                        name="sellDate"
+                        label="Choose sell date"
+                        format="MM/dd/yyyy"
+                        value={sellDate}
+                        onChange={sellDateChange}
+                        KeyboardButtonProps={{
+                            'aria-label': 'change date',
+                        }}
+                        className={s.input}
+                    />
                     <KeyboardDatePicker
                         margin="normal"
                         id="paymentDate"
@@ -312,7 +362,8 @@ export const InvoiceForm = () => {
                         </MenuItem>
                     ))}
                 </TextField>
-                <Button color="primary" variant="contained" type="submit" className={s.btn}>
+                <Button color="primary" disabled={invoiceProductArr.length === 0} variant="contained" type="submit"
+                        className={s.btn}>
                     Submit
                 </Button>
             </form>

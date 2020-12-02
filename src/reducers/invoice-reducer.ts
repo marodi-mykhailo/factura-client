@@ -1,6 +1,7 @@
 import {Dispatch} from "redux";
 import {facturaAPI} from "../api/factures-api";
 import {Simulate} from "react-dom/test-utils";
+import {resetProducts} from "./invoice-product-reducer";
 
 export type InvoiceType = {
     ID: string,
@@ -133,7 +134,9 @@ const addInvoice = (invoiceData: InvoiceType) => ({
 export const getInvoicesTC = () => (dispatch: Dispatch) => {
     facturaAPI.getInvoices()
         .then(res => {
-            setInvoices(res.data)
+            if (res.data.resultCode === 0) {
+                dispatch(setInvoices(res.data.data))
+            }
         })
         .catch(error => {
             console.log(error)
@@ -141,20 +144,22 @@ export const getInvoicesTC = () => (dispatch: Dispatch) => {
 }
 
 export type invoiceDataForCreate = {
-    paymentMilliseconds: number | null,
-    issueMilliseconds: number | null,
-    client: string,
-    seller: string,
-    product: string,
-    productCount: string,
-    status: string
+    sellDate: number | null,
+    paymentDate: number | null,
+    issueDate: number | null,
+    clientID: string,
+    sellerID: string,
+    products: InvoiceProductType[]
 }
 
 
 export const createInvoiceTC = (invoiceData: invoiceDataForCreate) => (dispatch: Dispatch) => {
     facturaAPI.createInvoice(invoiceData)
         .then((res) => {
-                console.log(res.data)
+            if (res.data.resultCode === 0) {
+                dispatch(addInvoice(res.data.data))
+                dispatch(resetProducts())
+            }
         }).catch((error) => {
         console.log(error)
     })

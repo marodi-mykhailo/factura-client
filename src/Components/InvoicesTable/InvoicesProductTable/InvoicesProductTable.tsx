@@ -24,6 +24,7 @@ type ProductPropsType = {
 
 export default function InvoicesProductTable(props: ProductPropsType) {
     const classes = useStyles();
+
     const productsAll = useSelector<AppRootStateType, ProductType[]>(state => state.products)
     const findProduct = (id: string) => {
         let product = productsAll.find(item => item.ID === id)
@@ -47,6 +48,7 @@ export default function InvoicesProductTable(props: ProductPropsType) {
                     </TableRow>
                 </TableHead>
                 <TableBody>
+
                     {props.products.map((row) => (
                         <TableRow key={row.ID}>
                             <TableCell component="th" scope="row">

@@ -97,7 +97,9 @@ const setSellers = (sellers: SellersType[]) => ({
 export const getSellersTC = () => (dispatch: Dispatch) => {
     facturaAPI.getSellers()
         .then(res => {
-            dispatch(setSellers(res.data))
+            if(res.data.resultCode === 0) {
+                dispatch(setSellers(res.data.data))
+            }
         }).catch(error => {
         console.log(error)
     })

@@ -12,17 +12,24 @@ const instance = axios.create({
     ...settings
 })
 
+
+type ResponseType<T = []> = {
+    resultCode: number
+    data: T,
+    message: string
+}
+
 export const facturaAPI = {
     getClients() {
-        return instance.get<ClientType[]>('clients')
+        return instance.get<ResponseType<ClientType[]>>('clients')
     },
     getSellers() {
-        return instance.get<SellersType[]>('sellers')
+        return instance.get<ResponseType<SellersType[]>>('sellers')
     },
     getInvoices() {
-        return instance.get<InvoiceType[]>('factures')
+        return instance.get<ResponseType<InvoiceType[]>>('factures')
     },
     createInvoice(invoiceData: invoiceDataForCreate) {
-        return instance.post('create-facture', invoiceData)
+        return instance.post<ResponseType<InvoiceType>>('create-facture', invoiceData)
     }
 }

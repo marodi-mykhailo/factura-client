@@ -12,13 +12,19 @@ import {Button, TextField} from "@material-ui/core";
 import {array} from "yup";
 import {SellersType} from "../../reducers/sellers-reducer";
 import {useDispatch} from "react-redux";
-import {changeAmount, deleteProduct} from "../../reducers/invoice-product-reducer";
+import {changeAmount, deleteProduct, resetProducts} from "../../reducers/invoice-product-reducer";
 import {EditableSpan} from "../EditableSpan/EditableSpan";
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
+import {red} from "@material-ui/core/colors";
+
 
 const useStyles = makeStyles({
     table: {
         minWidth: 650,
-
+        width: '100%',
+        overflow: 'auto',
+        maxHeight: '90vh',
     },
     paper: {
         maxWidth: 650,
@@ -56,24 +62,37 @@ export default function ProductPickerForm(props: ProductPropsType) {
             <Table className={classes.table} aria-label="simple table">
                 <TableHead>
                     <TableRow>
-                        <TableCell><span style={{fontSize: '16px'}}>Name</span></TableCell>
-                        <TableCell><span style={{fontSize: '16px'}}>Amount</span></TableCell>
+                        <TableCell><span style={{fontSize: '18px'}}>Name</span></TableCell>
+                        <TableCell><span style={{fontSize: '18px'}}>Amount</span></TableCell>
+                        {props.products.length > 0 && <TableCell align="right">
+                            <Button variant="contained"
+                                    color="secondary"
+                                    onClick={() => dispatch(resetProducts())}
+                            >
+                                reset
+                            </Button>
+                        </TableCell>
+                        }
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {props.products?.map((row) => (
                         <TableRow key={row.ID}>
                             <TableCell component="th" scope="row">
-                                <span style={{fontWeight: "bold"}}>{returnName(row.ID)}</span>
+                                <span style={{fontWeight: "bold", fontSize: '16px'}}>{returnName(row.ID)}</span>
                             </TableCell>
                             <TableCell component="th" scope="row">
-                                <span style={{fontWeight: "bold"}}>
+                                <span style={{fontWeight: "bold", fontSize: '16px'}}>
                                     <EditableSpan
                                         id={row.ID}
                                         value={row.amount}
                                         onChange={onChangeHandler}
                                     /></span>
-                                <Button onClick={() => deleteHandler(row.ID)}>Delete</Button>
+                            </TableCell>
+                            <TableCell component="th" scope="row" align={'right'}>
+                                <DeleteForeverIcon
+                                    style={{color: red[500], cursor: "pointer"}}
+                                    onClick={() => deleteHandler(row.ID)}/>
                             </TableCell>
                         </TableRow>
                     ))}
