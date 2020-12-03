@@ -1,0 +1,11 @@
+.wrapp {
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    align-items: center;
+    height: 80vh;
+}
+
+.img {
+    width: 80%;
+}

@@ -2,7 +2,8 @@ import {ClientAddressType, ClientCompanyType, ClientInfoType, ClientType} from "
 import {Dispatch} from "redux";
 import {facturaAPI} from "../api/factures-api";
 import {ProductType} from "./products-reducer";
-
+import {setIsInitializedAC} from "./app-reducer";
+import {handleServerAppError, handleServerNetworkError} from "../Components/utils/error-utils";
 
 
 export type SellersType = {
@@ -95,13 +96,18 @@ const setSellers = (sellers: SellersType[]) => ({
 })
 
 export const getSellersTC = () => (dispatch: Dispatch) => {
+    dispatch(setIsInitializedAC(false))
     facturaAPI.getSellers()
         .then(res => {
-            if(res.data.resultCode === 0) {
+            dispatch(setIsInitializedAC(true))
+            if (res.data.resultCode === 0) {
                 dispatch(setSellers(res.data.data))
+            } else {
+                handleServerAppError(res.data, dispatch);
             }
-        }).catch(error => {
-        console.log(error)
-    })
+        })
+        .catch((error) => {
+            handleServerNetworkError(error, dispatch)
+        })
 }
 

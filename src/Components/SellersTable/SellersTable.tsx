@@ -11,7 +11,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../redux/store";
 import {ClientType, getClientsTC} from "../../reducers/client-reducer";
 import {getSellersTC, SellersType} from "../../reducers/sellers-reducer";
-import {Backdrop, Button, Fade, Modal} from "@material-ui/core";
+import {Backdrop, Button, CircularProgress, Fade, Modal} from "@material-ui/core";
 import ClientsTable from "../ClientsTable/ClientsTable";
 import ProductTable from "../../ProductTable/ProductTable";
 import ShoppingBasketIcon from "@material-ui/icons/ShoppingBasket";
@@ -36,7 +36,11 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 
 export default function SellersTable() {
     const dispatch = useDispatch()
+    const classes = useStyles();
+
     const rows = useSelector<AppRootStateType, SellersType[]>(state => state.sellers)
+    let isInitialized = useSelector<AppRootStateType, boolean>(state => state.app.isInitialized)
+
     useEffect(() => {
         dispatch(getSellersTC())
     }, [])
@@ -49,7 +53,14 @@ export default function SellersTable() {
     const handleClose = () => {
         setOpen(false);
     };
-    const classes = useStyles();
+
+    if (!isInitialized) {
+        return <div
+            style={{position: 'fixed', top: '30%', textAlign: 'center', width: '100%'}}>
+            <CircularProgress/>
+        </div>
+    }
+
     return (
         <TableContainer component={Paper}>
             <Table className={classes.table} aria-label="simple table">

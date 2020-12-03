@@ -14,7 +14,7 @@ import {SellersType} from "../../reducers/sellers-reducer";
 import {deleteInvoiceTC, getInvoicesTC, InvoiceType} from "../../reducers/invoice-reducer";
 import ProductModal from "../ProductModal/ProductModal";
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-import {Box} from "@material-ui/core";
+import {Box, CircularProgress} from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     table: {
@@ -41,10 +41,12 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 export default function InvoicesTable() {
 
     const dispatch = useDispatch()
+    const classes = useStyles();
 
     const rows = useSelector<AppRootStateType, InvoiceType[]>(state => state.invoices)
     const clients = useSelector<AppRootStateType, ClientType[]>(state => state.clients)
     const sellers = useSelector<AppRootStateType, SellersType[]>(state => state.sellers)
+    let isInitialized = useSelector<AppRootStateType, boolean>(state => state.app.isInitialized)
 
     useEffect(() => {
         dispatch(getInvoicesTC())
@@ -71,7 +73,13 @@ export default function InvoicesTable() {
         dispatch(deleteInvoiceTC(invoiceId))
     }
 
-    const classes = useStyles();
+    if (!isInitialized) {
+        return <div
+            style={{position: 'fixed', top: '30%', textAlign: 'center', width: '100%'}}>
+            <CircularProgress/>
+        </div>
+    }
+
     return (
         <TableContainer component={Paper}>
             <Table size={"medium"} className={classes.table} aria-label="simple table">

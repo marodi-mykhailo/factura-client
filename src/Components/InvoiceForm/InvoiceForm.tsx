@@ -8,8 +8,8 @@ import {Backdrop, createStyles, Fade, makeStyles, MenuItem, Modal, Paper, Theme}
 import s from './InvoiceForm.module.css'
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../redux/store";
-import {ClientType} from "../../reducers/client-reducer";
-import {SellersType} from "../../reducers/sellers-reducer";
+import {ClientType, getClientsTC} from "../../reducers/client-reducer";
+import {getSellersTC, SellersType} from "../../reducers/sellers-reducer";
 import {KeyboardDatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import {createInvoiceTC} from "../../reducers/invoice-reducer";
@@ -172,9 +172,9 @@ export const InvoiceForm = () => {
         new Date(),
     );
 
-    const sellMilliseconds = issueDate && issueDate.getTime() / 1000
-    const paymentMilliseconds = paymentDate && paymentDate.getTime() / 1000
-    const issueMilliseconds = issueDate && issueDate.getTime() / 1000
+    const sellMilliseconds = issueDate && issueDate.getTime()
+    const paymentMilliseconds = paymentDate && paymentDate.getTime()
+    const issueMilliseconds = issueDate && issueDate.getTime()
 
     const sellDateChange = (date: Date | null) => {
         setSellDate(date);

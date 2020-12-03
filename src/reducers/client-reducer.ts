@@ -1,5 +1,7 @@
 import {Dispatch} from "redux";
 import {facturaAPI} from "../api/factures-api";
+import {setIsInitializedAC} from "./app-reducer";
+import {handleServerAppError, handleServerNetworkError} from "../Components/utils/error-utils";
 
 export type ClientInfoType = {
     ID: string,
@@ -73,12 +75,17 @@ const setClients = (clients: ClientType[]) => ({
 
 
 export const getClientsTC = () => (dispatch: Dispatch) => {
+    dispatch(setIsInitializedAC(false))
     facturaAPI.getClients()
         .then((res) => {
+            dispatch(setIsInitializedAC(true))
             if (res.data.resultCode === 0) {
                 dispatch(setClients(res.data.data))
+            } else {
+                handleServerAppError(res.data, dispatch);
             }
-        }).catch((error) => {
-        console.log(error)
-    })
+        })
+        .catch((error) => {
+            handleServerNetworkError(error, dispatch)
+        })
 }

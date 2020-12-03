@@ -1,6 +1,8 @@
 import {Dispatch} from "redux";
 import {facturaAPI} from "../api/factures-api";
 import {resetProducts} from "./invoice-product-reducer";
+import {setIsInitializedAC} from "./app-reducer";
+import {handleServerAppError, handleServerNetworkError} from "../Components/utils/error-utils";
 
 export type InvoiceType = {
     ID: string,
@@ -138,14 +140,18 @@ export const deleteInvoice = (id: string) => ({
 } as const)
 
 export const getInvoicesTC = () => (dispatch: Dispatch) => {
+    dispatch(setIsInitializedAC(false))
     facturaAPI.getInvoices()
         .then(res => {
+            dispatch(setIsInitializedAC(true))
             if (res.data.resultCode === 0) {
                 dispatch(setInvoices(res.data.data))
+            } else {
+                handleServerAppError(res.data, dispatch);
             }
         })
-        .catch(error => {
-            console.log(error)
+        .catch((error) => {
+            handleServerNetworkError(error, dispatch)
         })
 }
 
@@ -165,10 +171,13 @@ export const createInvoiceTC = (invoiceData: invoiceDataForCreate) => (dispatch:
             if (res.data.resultCode === 0) {
                 dispatch(addInvoice(res.data.data))
                 dispatch(resetProducts())
+            } else {
+                handleServerAppError(res.data, dispatch);
             }
-        }).catch((error) => {
-        console.log(error)
-    })
+        })
+        .catch((error) => {
+            handleServerNetworkError(error, dispatch)
+        })
 }
 
 export const deleteInvoiceTC = (invoiceId: string) => (dispatch: Dispatch) => {
@@ -176,8 +185,11 @@ export const deleteInvoiceTC = (invoiceId: string) => (dispatch: Dispatch) => {
         .then((res) => {
             if (res.data.resultCode === 0) {
                 dispatch(deleteInvoice(invoiceId))
+            } else {
+                handleServerAppError(res.data, dispatch);
             }
-        }).catch((error) => {
-        console.log(error)
-    })
+        })
+        .catch((error) => {
+            handleServerNetworkError(error, dispatch)
+        })
 }

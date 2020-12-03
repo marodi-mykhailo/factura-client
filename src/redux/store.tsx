@@ -5,6 +5,7 @@ import {sellersReducer} from "../reducers/sellers-reducer";
 import {invoiceReducer} from "../reducers/invoice-reducer";
 import {productReducer} from "../reducers/products-reducer";
 import {invoiceProductReducer} from "../reducers/invoice-product-reducer";
+import {appReducer} from "../reducers/app-reducer";
 
 const rootReducer = combineReducers({
     clients: clientReducer,
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
     invoices: invoiceReducer,
     products: productReducer,
     invoiceProducts: invoiceProductReducer,
+    app: appReducer
 })
 
 export const store = createStore(rootReducer, applyMiddleware(thunkMiddleware));

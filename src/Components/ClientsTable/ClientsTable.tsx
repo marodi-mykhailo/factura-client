@@ -10,6 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../redux/store";
 import {ClientType, getClientsTC} from "../../reducers/client-reducer";
+import {CircularProgress} from "@material-ui/core";
 
 const useStyles = makeStyles({
     table: {
@@ -18,13 +19,24 @@ const useStyles = makeStyles({
 });
 
 
+
 export default function ClientsTable() {
     const dispatch = useDispatch()
+    const classes = useStyles();
     const rows = useSelector<AppRootStateType, ClientType[]>(state => state.clients)
+    let isInitialized = useSelector<AppRootStateType, boolean>(state => state.app.isInitialized)
+
     useEffect(() => {
         dispatch(getClientsTC())
     }, [])
-    const classes = useStyles();
+
+    if (!isInitialized) {
+        return <div
+            style={{position: 'fixed', top: '30%', textAlign: 'center', width: '100%'}}>
+            <CircularProgress/>
+        </div>
+    }
+
     return (
         <TableContainer component={Paper}>
             <Table className={classes.table} aria-label="simple table">
