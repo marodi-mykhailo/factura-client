@@ -8,10 +8,19 @@ export const handleServerAppError = <D>(data: ResponseType<D>, dispatch: Dispatc
     } else {
         dispatch(setAppErrorAC('Some error occurred'))
     }
-    dispatch(setAppStatusAC('failed'))
+
+    if(data.resultCode === 0) {
+        dispatch(setAppStatusAC('succeeded'))
+
+    }else {
+        dispatch(setAppStatusAC('failed'))
+    }
 }
 
 export const handleServerNetworkError = (error: { message: string }, dispatch: Dispatch<SetAppErrorActionType | SetAppStatusActionType>) => {
     dispatch(setAppErrorAC(error.message ? error.message : 'Some error occurred'))
     dispatch(setAppStatusAC('failed'))
 }
+
+
+// export const handleServerAppSuccess =

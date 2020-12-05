@@ -1,7 +1,7 @@
 import {Dispatch} from "redux";
 import {facturaAPI} from "../api/factures-api";
 import {resetProducts} from "./invoice-product-reducer";
-import {setIsInitializedAC} from "./app-reducer";
+import {setAppStatusAC, setIsInitializedAC} from "./app-reducer";
 import {handleServerAppError, handleServerNetworkError} from "../Components/utils/error-utils";
 
 export type InvoiceType = {
@@ -141,11 +141,13 @@ export const deleteInvoice = (id: string) => ({
 
 export const getInvoicesTC = () => (dispatch: Dispatch) => {
     dispatch(setIsInitializedAC(false))
+    dispatch(setAppStatusAC("loading"))
     facturaAPI.getInvoices()
         .then(res => {
             dispatch(setIsInitializedAC(true))
             if (res.data.resultCode === 0) {
                 dispatch(setInvoices(res.data.data))
+                dispatch(setAppStatusAC("succeeded"))
             } else {
                 handleServerAppError(res.data, dispatch);
             }
@@ -166,11 +168,14 @@ export type invoiceDataForCreate = {
 
 
 export const createInvoiceTC = (invoiceData: invoiceDataForCreate) => (dispatch: Dispatch) => {
+    dispatch(setAppStatusAC("loading"))
     facturaAPI.createInvoice(invoiceData)
         .then((res) => {
             if (res.data.resultCode === 0) {
                 dispatch(addInvoice(res.data.data))
                 dispatch(resetProducts())
+                dispatch(setAppStatusAC("succeeded"))
+                handleServerAppError(res.data, dispatch);
             } else {
                 handleServerAppError(res.data, dispatch);
             }
@@ -181,10 +186,13 @@ export const createInvoiceTC = (invoiceData: invoiceDataForCreate) => (dispatch:
 }
 
 export const deleteInvoiceTC = (invoiceId: string) => (dispatch: Dispatch) => {
+    dispatch(setAppStatusAC("loading"))
     facturaAPI.deleteInvoice(invoiceId)
         .then((res) => {
             if (res.data.resultCode === 0) {
                 dispatch(deleteInvoice(invoiceId))
+                dispatch(setAppStatusAC("succeeded"))
+                handleServerAppError(res.data, dispatch);
             } else {
                 handleServerAppError(res.data, dispatch);
             }

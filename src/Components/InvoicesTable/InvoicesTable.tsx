@@ -15,6 +15,7 @@ import {deleteInvoiceTC, getInvoicesTC, InvoiceType} from "../../reducers/invoic
 import ProductModal from "../ProductModal/ProductModal";
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import {Box, CircularProgress} from "@material-ui/core";
+import {RequestStatusType} from "../../reducers/app-reducer";
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     table: {
@@ -46,7 +47,8 @@ export default function InvoicesTable() {
     const rows = useSelector<AppRootStateType, InvoiceType[]>(state => state.invoices)
     const clients = useSelector<AppRootStateType, ClientType[]>(state => state.clients)
     const sellers = useSelector<AppRootStateType, SellersType[]>(state => state.sellers)
-    let isInitialized = useSelector<AppRootStateType, boolean>(state => state.app.isInitialized)
+    const isInitialized = useSelector<AppRootStateType, boolean>(state => state.app.isInitialized)
+    const appStatus = useSelector<AppRootStateType, RequestStatusType>(state => state.app.status)
 
     useEffect(() => {
         dispatch(getInvoicesTC())
@@ -140,10 +142,12 @@ export default function InvoicesTable() {
                             <TableCell align="center">
                                 <Box display={'flex'}>
                                     <ProductModal products={row.products}/>
-                                    <DeleteOutlineIcon color={"secondary"}
+                                    <DeleteOutlineIcon color={appStatus === "loading" ? "disabled" : "secondary"}
                                                        style={{cursor: "pointer", margin: "0 10px"}}
                                                        fontSize={"large"}
-                                                       onClick={() => deleteHandler(row.ID)}/>
+                                                       onClick={appStatus === "loading" ? () => {}
+                                                           : () => deleteHandler(row.ID)}
+                                    />
                                 </Box>
                             </TableCell>
                         </TableRow>
