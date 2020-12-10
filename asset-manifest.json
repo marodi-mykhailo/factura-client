@@ -1,23 +1,23 @@
 {
   "files": {
     "main.css": "/factura-client/static/css/main.1dcffe43.chunk.css",
-    "main.js": "/factura-client/static/js/main.f3276584.chunk.js",
-    "main.js.map": "/factura-client/static/js/main.f3276584.chunk.js.map",
+    "main.js": "/factura-client/static/js/main.b71e6ec1.chunk.js",
+    "main.js.map": "/factura-client/static/js/main.b71e6ec1.chunk.js.map",
     "runtime-main.js": "/factura-client/static/js/runtime-main.1e78466e.js",
     "runtime-main.js.map": "/factura-client/static/js/runtime-main.1e78466e.js.map",
-    "static/js/2.e6777fa6.chunk.js": "/factura-client/static/js/2.e6777fa6.chunk.js",
-    "static/js/2.e6777fa6.chunk.js.map": "/factura-client/static/js/2.e6777fa6.chunk.js.map",
+    "static/js/2.46d9fd73.chunk.js": "/factura-client/static/js/2.46d9fd73.chunk.js",
+    "static/js/2.46d9fd73.chunk.js.map": "/factura-client/static/js/2.46d9fd73.chunk.js.map",
     "static/js/3.50b479c3.chunk.js": "/factura-client/static/js/3.50b479c3.chunk.js",
     "static/js/3.50b479c3.chunk.js.map": "/factura-client/static/js/3.50b479c3.chunk.js.map",
     "index.html": "/factura-client/index.html",
     "static/css/main.1dcffe43.chunk.css.map": "/factura-client/static/css/main.1dcffe43.chunk.css.map",
-    "static/js/2.e6777fa6.chunk.js.LICENSE.txt": "/factura-client/static/js/2.e6777fa6.chunk.js.LICENSE.txt",
+    "static/js/2.46d9fd73.chunk.js.LICENSE.txt": "/factura-client/static/js/2.46d9fd73.chunk.js.LICENSE.txt",
     "static/media/welcome.ad6cdb62.svg": "/factura-client/static/media/welcome.ad6cdb62.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.1e78466e.js",
-    "static/js/2.e6777fa6.chunk.js",
+    "static/js/2.46d9fd73.chunk.js",
     "static/css/main.1dcffe43.chunk.css",
-    "static/js/main.f3276584.chunk.js"
+    "static/js/main.b71e6ec1.chunk.js"
   ]
 }
