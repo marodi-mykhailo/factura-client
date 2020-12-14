@@ -109,8 +109,8 @@ export const invoiceReducer = (state = initialInvoiceReducerState, action: Invoi
             ]
         case "ADD_INVOICE":
             return [
+                ...state,
                 action.invoiceData,
-                ...state
             ]
         case "DELETE_INVOICE":
             return state.filter(item => item.numberFacture !== action.invoiceNumber)
