@@ -113,7 +113,7 @@ export const invoiceReducer = (state = initialInvoiceReducerState, action: Invoi
                 ...state
             ]
         case "DELETE_INVOICE":
-            return state.filter(item => item.ID !== action.id)
+            return state.filter(item => item.numberFacture !== action.invoiceNumber)
         default:
             return state
     }
@@ -134,9 +134,9 @@ const addInvoice = (invoiceData: InvoiceType) => ({
     invoiceData
 } as const)
 
-export const deleteInvoice = (id: string) => ({
+export const deleteInvoice = (invoiceNumber: string) => ({
     type: "DELETE_INVOICE",
-    id
+    invoiceNumber
 } as const)
 
 export const getInvoicesTC = () => (dispatch: Dispatch) => {
@@ -185,12 +185,12 @@ export const createInvoiceTC = (invoiceData: invoiceDataForCreate) => (dispatch:
         })
 }
 
-export const deleteInvoiceTC = (invoiceId: string) => (dispatch: Dispatch) => {
+export const deleteInvoiceTC = (invoiceNumber: string) => (dispatch: Dispatch) => {
     dispatch(setAppStatusAC("loading"))
-    facturaAPI.deleteInvoice(invoiceId)
+    facturaAPI.deleteInvoice(invoiceNumber)
         .then((res) => {
             if (res.data.resultCode === 0) {
-                dispatch(deleteInvoice(invoiceId))
+                dispatch(deleteInvoice(invoiceNumber))
                 dispatch(setAppStatusAC("succeeded"))
                 handleServerAppError(res.data, dispatch);
             } else {

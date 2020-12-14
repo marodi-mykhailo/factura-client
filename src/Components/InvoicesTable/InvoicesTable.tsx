@@ -52,7 +52,7 @@ export default function InvoicesTable() {
 
     useEffect(() => {
         dispatch(getInvoicesTC())
-    }, [])
+    }, [dispatch])
 
     const findClientName = (id: string) => {
         let client = clients.find(item => item.ID === id)
@@ -71,8 +71,8 @@ export default function InvoicesTable() {
         }
     }
 
-    const deleteHandler = (invoiceId: string) => {
-        dispatch(deleteInvoiceTC(invoiceId))
+    const deleteHandler = (invoiceNumber: string) => {
+        dispatch(deleteInvoiceTC(invoiceNumber))
     }
 
     if (!isInitialized) {
@@ -146,7 +146,7 @@ export default function InvoicesTable() {
                                                        style={{cursor: "pointer", margin: "0 10px"}}
                                                        fontSize={"large"}
                                                        onClick={appStatus === "loading" ? () => {}
-                                                           : () => deleteHandler(row.ID)}
+                                                           : () => deleteHandler(row.numberFacture)}
                                     />
                                 </Box>
                             </TableCell>
