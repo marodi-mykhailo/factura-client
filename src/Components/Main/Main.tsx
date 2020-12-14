@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import clsx from 'clsx';
 import {fade, createStyles, makeStyles, useTheme, Theme} from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -29,6 +29,9 @@ import s from './Main.module.css'
 import {green} from "@material-ui/core/colors";
 import Backdrop from '@material-ui/core/Backdrop';
 import {InvoiceForm} from "../InvoiceForm/InvoiceForm";
+import {useSelector} from "react-redux";
+import {AppRootStateType} from "../../redux/store";
+import {RequestStatusType} from "../../reducers/app-reducer";
 
 
 const drawerWidth = 240;
@@ -188,6 +191,9 @@ export default function Main(props: MainPropsType) {
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null);
     const [modal, setModalOpen] = React.useState(false);
 
+    const appStatus = useSelector<AppRootStateType, RequestStatusType>(state => state.app.status);
+
+
     const modalOpen = () => {
         setModalOpen(true);
     };
@@ -215,6 +221,12 @@ export default function Main(props: MainPropsType) {
 
     const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
         setMobileMoreAnchorEl(event.currentTarget);
+    };
+
+    const closeModalBySubmit = () => {
+        if(appStatus === "succeeded"){
+            setModalOpen(false);
+        }
     };
 
 
@@ -282,7 +294,7 @@ export default function Main(props: MainPropsType) {
                             }}
                         >
                             <Fade in={modal}>
-                                <InvoiceForm/>
+                                <InvoiceForm closeModalBySubmit={closeModalBySubmit}/>
                             </Fade>
                         </Modal>
                         <IconButton

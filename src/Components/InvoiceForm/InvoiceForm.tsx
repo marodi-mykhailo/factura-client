@@ -84,7 +84,11 @@ export type InvoiceStatus = "paid" | "partially" | "unpaid"
 
 const InvoicePaymentStatus: InvoiceStatus[] = ["paid", "partially", "unpaid"]
 
-export const InvoiceForm = () => {
+type InvoiceFormPropsType = {
+    closeModalBySubmit?: () => void;
+}
+
+export const InvoiceForm = (props: InvoiceFormPropsType) => {
     const dispatch = useDispatch()
     const classes = useStyles();
 
@@ -114,6 +118,9 @@ export const InvoiceForm = () => {
                 status: formik.values.status
             }
             dispatch(createInvoiceTC(newInvoice))
+
+            props.closeModalBySubmit &&  props.closeModalBySubmit()
+
             formik.resetForm({
                 values: {
                     client: '',
